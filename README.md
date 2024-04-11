@@ -41,7 +41,7 @@ game_board = Board(width=10, height=10, win_condition_length=5)
 ```
 
 ### Making a Move
-```
+```python
 # Player 1 marks position at row 3, column 4
 pos = Position(row=3, col=4)
 game_board.mark(player=player1, position=pos)
