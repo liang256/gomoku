@@ -115,3 +115,37 @@ class Board:
                 res.update(set(buff + reverse_buff[1:]))
 
         return res
+
+
+class Game:
+    def __init__(
+        self,
+        width: int,
+        height: int,
+        win_condition_length: int,
+        players: List[Player],
+    ) -> None:
+        if not players:
+            raise ValueError("players cannot be empty.")
+        self.board = Board(width, height, win_condition_length)
+        self.players = tuple(players)
+        self.curr_player_idx = 0
+        self.winner = None
+
+    @property
+    def curr_player(self):
+        return self.players[self.curr_player_idx]
+
+    def next_player(self) -> Player:
+        self.curr_player_idx = (self.curr_player_idx + 1) % len(self.players)
+        return self.players[self.curr_player_idx]
+
+    def play_turn(self, position: Position):
+        if self.board.mark(self.curr_player, position):
+            if self.board.get_continuous_cells(position):
+                return f"Player {self.curr_player.id} wins!"
+            elif self.board.is_full():
+                return "It's a draw."
+            else:
+                return f"Player {self.next_player().id}'s turn."
+        return f"Invalid move {position.to_tuple()}."
