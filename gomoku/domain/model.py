@@ -141,11 +141,13 @@ class Game:
         return self.players[self.curr_player_idx]
 
     def play_turn(self, position: Position):
-        if self.board.mark(self.curr_player, position):
-            if self.board.get_continuous_cells(position):
-                return f"Player {self.curr_player.id} wins!"
-            elif self.board.is_full():
-                return "It's a draw."
-            else:
-                return f"Player {self.rotate_player().id}'s turn."
-        return f"Invalid move {position.to_tuple()}."
+        if self.board.mark(self.curr_player, position) is False:
+            return f"Invalid move {position.to_tuple()}."
+
+        if self.board.get_continuous_cells(position):
+            return f"Player {self.curr_player.id} wins!"
+
+        if self.board.is_full():
+            return "It's a draw."
+
+        return f"Player {self.rotate_player().id}'s turn."
