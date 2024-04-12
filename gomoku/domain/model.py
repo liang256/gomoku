@@ -136,7 +136,7 @@ class Game:
     def curr_player(self):
         return self.players[self.curr_player_idx]
 
-    def next_player(self) -> Player:
+    def rotate_player(self) -> Player:
         self.curr_player_idx = (self.curr_player_idx + 1) % len(self.players)
         return self.players[self.curr_player_idx]
 
@@ -147,5 +147,5 @@ class Game:
             elif self.board.is_full():
                 return "It's a draw."
             else:
-                return f"Player {self.next_player().id}'s turn."
+                return f"Player {self.rotate_player().id}'s turn."
         return f"Invalid move {position.to_tuple()}."
