@@ -2,10 +2,6 @@ from dataclasses import dataclass
 from typing import List, Dict, Optional
 
 
-class CellOccupied(Exception):
-    pass
-
-
 class OutOfBound(Exception):
     pass
 
@@ -58,11 +54,11 @@ class Board:
 
     def mark(
         self, player: Player, position: Position, meta_data: Dict = None
-    ) -> None:
-        if not self.is_position_empty(position):
-            raise CellOccupied(position.row, position.col)
-
+    ) -> bool:
+        if not self.can_mark(position):
+            return False
         self.grid[position.row][position.col] = Cell(player, meta_data)
+        return True
 
     def get(self, position: Position) -> Optional[Cell]:
         if not self.is_in_bound(position):
@@ -70,16 +66,16 @@ class Board:
         return self.grid[position.row][position.col]
 
     def can_mark(self, position: Position) -> bool:
-        return (
-            self.is_in_bound(position)
-            and self.grid[position.row][position.col] is None
-        )
+        return self.is_in_bound(position) and self.is_position_empty(position)
 
     def is_in_bound(self, position: Position) -> bool:
         return 0 <= position.row < self.height and 0 <= position.col < self.width
 
     def is_position_empty(self, position: Position) -> bool:
         return self.grid[position.row][position.col] is None
+
+    def is_full(self) -> bool:
+        return all(all(cell for cell in row) for row in self.grid)
 
     def _iterate_position_in_direction(self, position: Position, dir_x, dir_y):
         if dir_x not in (-1, 0, 1) or dir_y not in (-1, 0, 1):

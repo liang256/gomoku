@@ -17,7 +17,7 @@ def test_board_can_mark_cell():
     position = model.Position(0, 0)
     meta_data = {"color": (1, 1, 1)}
     board = model.Board(5, 5, 3)
-    board.mark(player, position, meta_data)
+    assert board.mark(player, position, meta_data)
     assert board.grid[0][0] is not None
     assert board.grid[0][0].player == player
     assert board.grid[0][0].data == meta_data
@@ -52,3 +52,13 @@ def test_board_can_get_continous_cells():
     assert {p.to_tuple() for p in positions} == set(
         [(0, 0), (1, 1), (2, 2), (3, 3), (3, 1), (1, 3), (2, 3), (3, 2)]
     )
+
+
+def test_is_full():
+    bob = model.Player("bob")
+    board = model.Board(4, 4, 3)
+    positions = [[1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]]
+    for row in range(4):
+        for col in range(4):
+            board.mark(bob, model.Position(row, col))
+    assert board.is_full()
